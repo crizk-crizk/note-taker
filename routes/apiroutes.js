@@ -8,10 +8,14 @@ router.get("/", (req, res) => {
   fs.readFile(path.join(__dirname, '../db/db.json'), 'utf8', (err, data) =>{
     if (err) throw err;
     console.log(data)
-    res.send(JSON.parse(data));
+    data =JSON.parse(data);
+    data.forEach((e, i) => e.id = i);
+    res.send(data);
+
   } )
 });
 
+//Accept information from page by listening to save button click.
 router.post("/", (req, res) => {
   //grab data from req.body to get what is in front end.
   let newNote = req.body;
@@ -28,6 +32,19 @@ router.post("/", (req, res) => {
       res.send(data);
     })
   } )
+});
+
+//delete notes
+router.delete("/:id", (req, res) => {
+  let id = parseInt(req.params["id"]);
+  fs.readFile(path.join(__dirname, '../db/db.json'), 'utf8', (err, data) => {
+    data = JSON.parse(data);
+    data = data.filter((e, i) => i !== id);
+    fs.writeFile(path.join(__dirname, '../db/db.json'), JSON.stringify(data), (err) => {
+      if (err) throw err;
+      res.send(data);
+    });
+  });
 });
 
 module.exports = router;
