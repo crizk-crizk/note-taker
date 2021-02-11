@@ -13,12 +13,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+//ROUTES
 app.get('/', (req, res) => {
   //send back the index.html
   res.sendFile(path.join(`${__dirname}/public/index.html`));
 })
 
-//ROUTES
+
 app.use(`/api/notes`, apiRoutes);
 app.use(`/notes`, htmlRoutes);
 
