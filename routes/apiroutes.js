@@ -23,7 +23,11 @@ router.post("/", (req, res) => {
     // parse data and push req.body (new array)
     data =JSON.parse(data);
     //adding ids to notes
-    newNote.id = data[data.length-1].id + 1;
+    if(data.length > 0) {
+      newNote.id = data[data.length-1].id + 1;
+    } else {
+      newNote.id = 0;
+    }
     data.push(newNote);
     console.log(data);
     // call fs.writeFile with new array
