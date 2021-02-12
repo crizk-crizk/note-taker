@@ -1,4 +1,4 @@
-const { json } = require("body-parser");
+//const { json } = require("body-parser");
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
@@ -9,9 +9,7 @@ router.get("/", (req, res) => {
     if (err) throw err;
     console.log(data)
     data =JSON.parse(data);
-    data.forEach((e, i) => e.id = i);
     res.send(data);
-
   } )
 });
 
@@ -24,6 +22,8 @@ router.post("/", (req, res) => {
     //console.log(data)
     // parse data and push req.body (new array)
     data =JSON.parse(data);
+    //adding ids to notes
+    newNote.id = data[data.length-1].id + 1;
     data.push(newNote);
     console.log(data);
     // call fs.writeFile with new array
@@ -39,7 +39,7 @@ router.delete("/:id", (req, res) => {
   let id = parseInt(req.params["id"]);
   fs.readFile(path.join(__dirname, '../db/db.json'), 'utf8', (err, data) => {
     data = JSON.parse(data);
-    data = data.filter((e, i) => i !== id);
+    data = data.filter((note) => note.id !== id);
     fs.writeFile(path.join(__dirname, '../db/db.json'), JSON.stringify(data), (err) => {
       if (err) throw err;
       res.send(data);
